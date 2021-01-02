@@ -16,41 +16,41 @@ let g:loaded_flipdir = 1
 " functions {{{1
 " open file tree
 function! s:Flip(cmd,...)
-    let l:dir = get(a:, 1, expand('%:p:h'))
-    exec a:cmd.' '.l:dir.'/'
-    let l:list = systemlist('ls '.shellescape(l:dir).' -a --group-directories-first')
-    for l in l:list
-        if isdirectory(l:dir.'/'.l)
-            let l .= '/'
-        endif
-        put = l
-    endfor
-    0delete
-    keeppatterns g/^\.\+\//d
-    setlocal nobuflisted bufhidden=wipe buftype=nofile
-    set filetype=flipdir
+	let l:dir = get(a:, 1, expand('%:p:h'))
+	exec a:cmd.' '.l:dir.'/'
+	let l:list = systemlist('ls '.shellescape(l:dir).' -a --group-directories-first')
+	for l in l:list
+		if isdirectory(l:dir.'/'.l)
+			let l .= '/'
+		endif
+		put = l
+	endfor
+	0delete
+	keeppatterns g/^\.\+\//d
+	setlocal nobuflisted bufhidden=wipe buftype=nofile
+	set filetype=flipdir
 endfunction
 
 " enter path (file/directory)
 function! s:Enter(cmd) range
-    let l:dir = expand('%:p')
-    for l in getline(a:firstline, a:lastline)
-	let l:path = l:dir . fnameescape(l)
-	exec a:cmd.' '.l:path
-	if l:path =~ "/$"
-	    call <SID>Flip("edit", expand('%:p:h'))
-	    return
-	endif
-    endfor
+	let l:dir = expand('%:p')
+	for l in getline(a:firstline, a:lastline)
+		let l:path = l:dir . fnameescape(l)
+		exec a:cmd.' '.l:path
+		if l:path =~ "/$"
+			call <SID>Flip("edit", expand('%:p:h'))
+			return
+		endif
+	endfor
 endfunction
 
 " return up-directory path
 function! s:GetUpdir()
-    if isdirectory(expand('%'))
-	return expand('%:p:h:h')
-    else
-	return expand('%:p:h')
-    endif
+	if isdirectory(expand('%'))
+		return expand('%:p:h:h')
+	else
+		return expand('%:p:h')
+	endif
 endfunction
 
 " mappings {{{1
@@ -83,12 +83,12 @@ nmap <C-e>v <Plug>(flipdir_VsplitUp)
 command! -nargs=? -complete=dir Flipdir call <SID>Flip('edit', <f-args>)
 
 if get(g:, 'loaded_netrwPlugin', 0)
-    augroup flipdir
-	au!
-	autocmd VimEnter * if isdirectory(expand('<afile>')) |
-	    \Flipdir %:p:h
-    augroup END
+	augroup flipdir
+		au!
+		autocmd VimEnter * if isdirectory(expand('<afile>')) |
+			\Flipdir %:p:h
+	augroup END
 endif
 " }}}
 
-" vim: set fdm=marker :
+" vim: set noet fdm=marker :
