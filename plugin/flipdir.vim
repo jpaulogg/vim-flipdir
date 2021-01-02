@@ -18,7 +18,7 @@ let g:loaded_flipdir = 1
 function! s:Flip(...)
     let l:cmd = get(a:, 1, 'edit')
     let l:dir = get(a:, 2, expand('%:p:h'))
-    exec l:cmd.' '.l:dir
+    exec l:cmd.' '.l:dir.'/'
     let l:list = systemlist('ls '.shellescape(l:dir).' -a --group-directories-first')
     for l in l:list
         if isdirectory(l:dir.'/'.l)
@@ -34,11 +34,12 @@ endfunction
 
 " enter path (file/directory)
 function! s:Enter(cmd) range
+    let l:dir = expand('%:p')
     for l in getline(a:firstline, a:lastline)
-	let l:path = expand('%:p').fnameescape(l)
+	let l:path = l:dir . fnameescape(l)
 	exec a:cmd.' '.l:path
 	if l:path =~ "/$"
-	    call <SID>Flip("edit", expand('%:p'))
+	    call <SID>Flip("edit", expand('%:p:h'))
 	    return
 	endif
     endfor
