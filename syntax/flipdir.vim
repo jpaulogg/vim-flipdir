@@ -3,7 +3,6 @@ if exists("b:current_syntax")
 endif
 
 syn match MiniTreeDir ".*/$"
-
 hi def link MiniTreeDir netrwDir
 
 let b:current_syntax = "text"

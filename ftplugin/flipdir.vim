@@ -1,3 +1,8 @@
+if exists("b:did_ftplugin")
+  finish
+endif
+let b:did_ftplugin = 1
+
 " filetype mappings
 nmap <buffer><nowait> gh <Plug>(flipdir_HideDot)
 nmap <buffer><nowait> r  <Plug>(flipdir_Reload)
