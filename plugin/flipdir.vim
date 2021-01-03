@@ -25,7 +25,7 @@ function s:Flip(cmd,...)
 		put = l
 	endfor
 	0delete
-	setl nobl bh=wipe bt=nofile ft=flipdir
+	setlocal noswf nobl bh=wipe bt=nofile ft=flipdir
 	if exists('s:lastpath')
 		call search(s:lastpath, 'c')
 	endif
@@ -61,12 +61,12 @@ nmap <silent> <Plug>(flip_updir)   :call <SID>Flip('edit', <SID>GetUpdir())<CR>
 nmap <silent> <Plug>(split_updir)  :call <SID>Flip('split')<CR>
 nmap <silent> <Plug>(vsplit_updir) :call <SID>flip('vsplit')<CR>
 
-map <silent> <Plug>(flip_linepaths)   :call <SID>Enter('edit')<CR>
-map <silent> <Plug>(split_linepaths)  :call <SID>Enter('topleft split')<CR>
-map <silent> <Plug>(vsplit_linepaths) :call <SID>Enter('topleft vsplit')<CR>
-map <silent> <Plug>(preview_linepath) :call <SID>Enter('botright vert pedit')<CR><C-w>=
+map <silent> <Plug>(flip_linepaths)    :call <SID>Enter('edit')<CR>
+map <silent> <Plug>(split_linepaths)   :call <SID>Enter('topleft split')<CR>
+map <silent> <Plug>(vsplit_linepaths)  :call <SID>Enter('topleft vsplit')<CR>
+map <silent> <Plug>(preview_linepaths) :call <SID>Enter('botright vert pedit')<CR><C-w>=
 
-nmap <silent> <Plug>(flipdir_hidedot) :keeppatterns g/^\./d<CR>gg
+nmap <silent> <Plug>(flipdir_hidedot) :keeppatterns g/^\./d<CR>:silent! normal ''<CR>
 nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flip('edit')<CR>
 
 " global key mapping {{{1
