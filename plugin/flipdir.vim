@@ -1,9 +1,9 @@
 " flipdir.vim - Vim Split Explorer
 
-" Autor:	   João Paulo G. Garcia
-" Licença:	 público (public domain)
+" Autor:       João Paulo G. Garcia
+" Licença:     público (public domain)
 " Editado em:  02 de janeiro de 2021
-" Requer:	  unix-like OS
+" Requer:      unix-like OS
 " 
 " Permite listar diretórios e seus conteúdos, além de abrir arquivos listados.
 " <https://github.com/jpaulogg/flipdir.git>
