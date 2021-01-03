@@ -13,7 +13,7 @@ if exists('g:loaded_flipdir')
 endif
 let g:loaded_flipdir = 1
 
-" function - flip/split directory {{{1
+" flip/split directory {{{1
 function s:Flip(cmd,...)
 	let l:dir = get(a:, 1, expand('%:p:h'))
 	exec a:cmd.' '.l:dir.'/'
@@ -31,7 +31,7 @@ function s:Flip(cmd,...)
 	endif
 endfunction
 
-" function - flip/split line(s) path(s) (file/directory) {{{1
+" flip/split current line or visual selected paths (file/directory) {{{1
 function s:Enter(cmd) range
 	let l:dir = expand('%:p')
 	for l in getline(a:firstline, a:lastline)
@@ -43,7 +43,7 @@ function s:Enter(cmd) range
 	endfor
 endfunction
 
-" function - return up-directory path {{{1
+" return up-directory path {{{1
 function s:GetUpdir()
 	if isdirectory(expand('%'))
 		let s:lastpath = '^'.expand('%:h:t').'/$'
@@ -82,7 +82,7 @@ nmap <C-f>w <Plug>(flip_workdir)
 nmap <C-f>s <Plug>(split_updir)
 nmap <C-f>v <Plug>(vsplit_updir)
 
-" command {{{1
+" Flipdir command {{{1
 command -nargs=? -complete=dir Flipdir call <SID>Flip('edit', <f-args>)
 
 if get(g:, 'loaded_netrwPlugin', 0)
