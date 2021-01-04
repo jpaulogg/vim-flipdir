@@ -65,6 +65,7 @@ map <silent> <Plug>(flip_linepath)    :call <SID>Fliplines('edit')<CR>
 map <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
 map <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
 map <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
+map <silent> <Plug>(arglist_linepath) :call <SID>Fliplines('argadd')<CR>
 
 nmap <silent> <Plug>(flipdir_hidedot) :keeppatterns g/^\./d<CR>:silent! normal ''<CR>
 nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flipdir('edit')<CR>

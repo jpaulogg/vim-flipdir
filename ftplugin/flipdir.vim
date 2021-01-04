@@ -12,6 +12,7 @@ if get(g:, 'flipdir_mappings', 1)
 	map  <buffer><nowait> s  <Plug>(split_linepath)
 	map  <buffer><nowait> v  <Plug>(vsplit_linepath)
 	map  <buffer><nowait> p  <Plug>(preview_linepath)
+	map  <buffer><nowait> a  <Plug>(arglist_linepath)
 
 	" delete flipdir buffer
 	nmap <buffer><nowait><silent> gq :bdelete!<CR>
