@@ -1,12 +1,12 @@
 " flipdir.vim - Flip/Split Directory Browser <https://github.com/jpaulogg/flipdir.git>
 
-" Autor:       João Paulo G. Garcia
-" Licença:     público (public domain)
-" Editado em:  03 de janeiro de 2021
-" Requer:      posix shell
-" 
-" Vira janelas de arquivo em buffers do explorador, permitindo visualizar e
-" interagir com a saída do comando 'ls -a --group-directories-first' (unix).
+" Author:      João Paulo G. Garcia
+" Licence:     public domain
+" Last Change: 2020-01-04
+" Requeriment: posix shell
+
+" Flip or split current buffer into new buffer with 'ls' shell command output.
+" Each line in the buffer is a 'tail' path, which is used to flip/split files.
 
 if exists('g:loaded_flipdir')
 	finish
