@@ -15,7 +15,7 @@ let g:loaded_flipdir = 1
 
 " flip/split directory {{{1
 function s:Flipdir(cmd,...)
-	let l:dir = get(a:, 1, expand('%:p:h'))
+	let l:dir = get(a:, 1, s:Updir())
 	exec a:cmd.' '.l:dir.'/'
 	let l:list = systemlist('ls '.shellescape(l:dir).' -A --group-directories-first')
 	for l in l:list
@@ -37,7 +37,7 @@ function s:Fliplines(cmd) range
 	for l in getline(a:firstline, a:lastline)
 		exec a:cmd.' '.l:dir.fnameescape(l)
 		if l =~ "/$"
-			call s:Flipdir("edit")
+			call s:Flipdir("edit", expand('%:p:h'))
 			return
 		endif
 	endfor
@@ -57,7 +57,7 @@ endfunction
 " Plug mapping {{{1
 
 nmap <silent> <Plug>(flip_workdir) :call <SID>Flipdir('edit', getcwd())<CR>
-nmap <silent> <Plug>(flip_updir)   :call <SID>Flipdir('edit', <SID>Updir())<CR>
+nmap <silent> <Plug>(flip_updir)   :call <SID>Flipdir('edit')<CR>
 nmap <silent> <Plug>(split_updir)  :call <SID>Flipdir('split')<CR>
 nmap <silent> <Plug>(vsplit_updir) :call <SID>Flipdir('vsplit')<CR>
 
@@ -71,16 +71,14 @@ nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flipdir('edit')<CR>
 
 " global key mapping {{{1
 " local mappings to flipdir buffers in the 'ftplugin' directory
+" 'let g:flipdir_defaults = 0' to disable default mappings
 
-" flip directory
-nmap - <Plug>(flip_updir)
-
-" flip work directory
-nmap <C-f>w <Plug>(flip_workdir)
-
-" split directory
-nmap <C-f>s <Plug>(split_updir)
-nmap <C-f>v <Plug>(vsplit_updir)
+if get(g:, 'flipdir_defaults', 1)
+	nmap - <Plug>(flip_updir)
+	nmap <C-f>w <Plug>(flip_workdir)
+	nmap <C-f>s <Plug>(split_updir)
+	nmap <C-f>v <Plug>(vsplit_updir)
+endif
 
 " Flipdir command {{{1
 command -nargs=? -complete=dir Flipdir call s:Flipdir('edit', <f-args>)
