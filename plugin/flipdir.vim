@@ -35,9 +35,9 @@ endfunction
 function s:Fliplines(cmd) range
 	let l:dir = expand('%:p')
 	for l in getline(a:firstline, a:lastline)
-		exec a:cmd.' '.l:dir . fnameescape(l)
+		exec a:cmd.' '.l:dir.fnameescape(l)
 		if l =~ "/$"
-			call <SID>Flipdir("edit")
+			call s:Flipdir("edit")
 			return
 		endif
 	endfor
@@ -83,7 +83,7 @@ nmap <C-f>s <Plug>(split_updir)
 nmap <C-f>v <Plug>(vsplit_updir)
 
 " Flipdir command {{{1
-command -nargs=? -complete=dir Flipdir call <SID>Flipdir('edit', <f-args>)
+command -nargs=? -complete=dir Flipdir call s:Flipdir('edit', <f-args>)
 
 if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
