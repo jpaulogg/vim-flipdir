@@ -2,7 +2,7 @@
 
 " Autor:       João Paulo G. Garcia
 " Licença:     público (public domain)
-" Editado em:  02 de janeiro de 2021
+" Editado em:  03 de janeiro de 2021
 " Requer:      posix shell
 " 
 " Vira janelas de arquivo em buffers do explorador, permitindo visualizar e
@@ -14,7 +14,7 @@ endif
 let g:loaded_flipdir = 1
 
 " flip/split directory {{{1
-function s:Flip(cmd,...)
+function s:Flipdir(cmd,...)
 	let l:dir = get(a:, 1, expand('%:p:h'))
 	exec a:cmd.' '.l:dir.'/'
 	let l:list = systemlist('ls '.shellescape(l:dir).' -A --group-directories-first')
@@ -31,20 +31,20 @@ function s:Flip(cmd,...)
 	endif
 endfunction
 
-" flip/split current line or visual selected paths (file/directory) {{{1
-function s:Enter(cmd) range
+" flip/split current or visually selected line paths (file/directory) {{{1
+function s:Fliplines(cmd) range
 	let l:dir = expand('%:p')
 	for l in getline(a:firstline, a:lastline)
 		exec a:cmd.' '.l:dir . fnameescape(l)
 		if l =~ "/$"
-			call <SID>Flip("edit")
+			call <SID>Flipdir("edit")
 			return
 		endif
 	endfor
 endfunction
 
 " return up-directory path {{{1
-function s:GetUpdir()
+function s:Updir()
 	if isdirectory(expand('%'))
 		let s:lastpath = '^'.expand('%:h:t').'/$'
 		return expand('%:p:h:h')
@@ -56,18 +56,18 @@ endfunction
 
 " Plug mapping {{{1
 
-nmap <silent> <Plug>(flip_workdir) :call <SID>Flip('edit', getcwd())<CR>
-nmap <silent> <Plug>(flip_updir)   :call <SID>Flip('edit', <SID>GetUpdir())<CR>
-nmap <silent> <Plug>(split_updir)  :call <SID>Flip('split')<CR>
-nmap <silent> <Plug>(vsplit_updir) :call <SID>flip('vsplit')<CR>
+nmap <silent> <Plug>(flip_workdir) :call <SID>Flipdir('edit', getcwd())<CR>
+nmap <silent> <Plug>(flip_updir)   :call <SID>Flipdir('edit', <SID>Updir())<CR>
+nmap <silent> <Plug>(split_updir)  :call <SID>Flipdir('split')<CR>
+nmap <silent> <Plug>(vsplit_updir) :call <SID>Flipdir('vsplit')<CR>
 
-map <silent> <Plug>(flip_linepaths)    :call <SID>Enter('edit')<CR>
-map <silent> <Plug>(split_linepaths)   :call <SID>Enter('topleft split')<CR>
-map <silent> <Plug>(vsplit_linepaths)  :call <SID>Enter('topleft vsplit')<CR>
-map <silent> <Plug>(preview_linepaths) :call <SID>Enter('botright vert pedit')<CR><C-w>=
+map <silent> <Plug>(flip_linepath)    :call <SID>Fliplines('edit')<CR>
+map <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
+map <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
+map <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
 
 nmap <silent> <Plug>(flipdir_hidedot) :keeppatterns g/^\./d<CR>:silent! normal ''<CR>
-nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flip('edit')<CR>
+nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flipdir('edit')<CR>
 
 " global key mapping {{{1
 " local mappings to flipdir buffers in the 'ftplugin' directory
@@ -83,7 +83,7 @@ nmap <C-f>s <Plug>(split_updir)
 nmap <C-f>v <Plug>(vsplit_updir)
 
 " Flipdir command {{{1
-command -nargs=? -complete=dir Flipdir call <SID>Flip('edit', <f-args>)
+command -nargs=? -complete=dir Flipdir call <SID>Flipdir('edit', <f-args>)
 
 if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
