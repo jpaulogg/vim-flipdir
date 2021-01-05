@@ -8,12 +8,15 @@ let b:did_ftplugin = 1
 if get(g:, 'flipdir_mappings', 1)
 
 	" line paths commands
-	nmap <buffer><nowait> h  <Plug>(flip_updir)
-	map  <buffer><nowait> l  <Plug>(flip_linepath)
-	map  <buffer><nowait> s  <Plug>(split_linepath)
-	map  <buffer><nowait> v  <Plug>(vsplit_linepath)
-	map  <buffer><nowait> p  <Plug>(preview_linepath)
-	map  <buffer><nowait> a  <Plug>(arglist_linepath)
+	map <buffer> l <Plug>(flip_linepath)
+	map <buffer> s <Plug>(split_linepath)
+	map <buffer> v <Plug>(vsplit_linepath)
+	map <buffer> t <Plug>(tabedit_linepath)
+	map <buffer> p <Plug>(preview_linepath)
+	map <buffer> a <Plug>(argadd_linepath)
+
+	" up directory
+	nmap <buffer><silent> h :Flipdir<CR>
 
 	" edit flipdir buffer
 	nmap <buffer><nowait> gh <Plug>(flipdir_hidedot)
@@ -21,4 +24,5 @@ if get(g:, 'flipdir_mappings', 1)
 
 	" delete flipdir buffer
 	nmap <buffer><nowait><silent> gq :bdelete!<CR>
+
 endif

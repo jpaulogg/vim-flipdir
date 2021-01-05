@@ -54,35 +54,10 @@ function s:Updir()
 	endif
 endfunction
 
-" Plug mapping {{{1
-
-nmap <silent> <Plug>(flip_workdir) :call <SID>Flipdir('edit', getcwd())<CR>
-nmap <silent> <Plug>(flip_updir)   :call <SID>Flipdir('edit')<CR>
-nmap <silent> <Plug>(split_updir)  :call <SID>Flipdir('split')<CR>
-nmap <silent> <Plug>(vsplit_updir) :call <SID>Flipdir('vsplit')<CR>
-
-map <silent> <Plug>(flip_linepath)    :call <SID>Fliplines('edit')<CR>
-map <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
-map <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
-map <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
-map <silent> <Plug>(arglist_linepath) :call <SID>Fliplines('argadd')<CR>
-
-nmap <silent> <Plug>(flipdir_hidedot) :keeppatterns g/^\./d<CR>:silent! normal ''<CR>
-nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flipdir('edit')<CR>
-
-" global key mapping {{{1
-" local mappings to flipdir buffers in the 'ftplugin' directory
-" 'let g:flipdir_defaults = 0' to disable default mappings
-
-if get(g:, 'flipdir_mappings', 1)
-	nmap - <Plug>(flip_updir)
-	nmap <C-f>w <Plug>(flip_workdir)
-	nmap <C-f>s <Plug>(split_updir)
-	nmap <C-f>v <Plug>(vsplit_updir)
-endif
-
 " Flipdir command {{{1
-command -nargs=? -complete=dir Flipdir call s:Flipdir('edit', <f-args>)
+command -nargs=? -complete=dir Flipdir   call s:Flipdir('edit', <f-args>)
+command -nargs=? -complete=dir Splitdir  call s:Flipdir('split', <f-args>)
+command -nargs=? -complete=dir Vsplitdir call s:Flipdir('vsplit', <f-args>)
 
 if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
@@ -93,5 +68,24 @@ if get(g:, 'loaded_netrwPlugin', 0)
 	augroup END
 endif
 " }}}
+" Plug mapping {{{1
+
+map <silent> <Plug>(flip_linepath)    :call <SID>Fliplines('edit')<CR>
+map <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
+map <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
+map <silent> <Plug>(tabedit_linepath) :call <SID>Fliplines('tabedit')<CR>
+map <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
+map <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
+
+nmap <silent> <Plug>(flip_workdir)    :call <SID>Flipdir('edit', getcwd())<CR>
+nmap <silent> <Plug>(flipdir_hidedot) :keeppatterns g/^\./d<CR>:silent! normal ''<CR>
+nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flipdir('edit')<CR>
+
+" global key mapping {{{1
+" local mappings to flipdir buffers in the 'ftplugin' directory
+" 'let g:flipdir_defaults = 0' to disable default mappings
+if get(g:, 'flipdir_mappings', 1)
+	nmap <silent> - :Flipdir<CR>
+endif
 
 " vim: set noet fdm=marker :
