@@ -1,5 +1,5 @@
 " flipdir buffer local mappings
-" 'let g:flipdir_defaults = 0' to disable default mappings
+" 'let g:flipdir_mappings = 0' to disable default mappings
 if exists("b:did_ftplugin")
 	finish
 endif
