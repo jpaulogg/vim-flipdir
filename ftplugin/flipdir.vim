@@ -14,7 +14,7 @@ map <unique><buffer> p <Plug>(preview_linepath)
 map <unique><buffer> a <Plug>(argadd_linepath)
 
 " up directory
-nmap <buffer><silent> h :Flipdir<CR>
+nmap <unique><buffer><silent> h :Flipdir<CR>
 
 " edit flipdir buffer
 nmap <unique><buffer><nowait> gh <Plug>(flipdir_hidedot)

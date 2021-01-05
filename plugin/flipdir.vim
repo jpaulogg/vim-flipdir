@@ -84,9 +84,7 @@ nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flipdir('edit')<CR>
 " global key mapping
 " local mappings to flipdir buffers in the 'ftplugin' directory
 " 'let g:flipdir_mappings = 0' to disable default mappings
-if get(g:, 'flipdir_mappings', 1)
-	nmap <silent> - :Flipdir<CR>
-endif
-" }}}
+nmap <unique><silent> - :Flipdir<CR>
 
+" }}}
 " vim: set noet fdm=marker :
