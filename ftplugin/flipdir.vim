@@ -5,6 +5,9 @@ if exists("b:did_ftplugin")
 endif
 let b:did_ftplugin = 1
 
+" settings
+setlocal nospell noswf nobl bh=wipe bt=nofile
+
 " line paths commands
 map <unique><buffer> l <Plug>(flip_linepath)
 map <unique><buffer> s <Plug>(split_linepath)

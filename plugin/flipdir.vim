@@ -25,7 +25,7 @@ function s:Flipdir(cmd,...)
 		put = l
 	endfor
 	0delete
-	setlocal noswf nobl bh=wipe bt=nofile ft=flipdir
+	setl ft=flipdir
 	if exists('s:lastpath')
 		call search(s:lastpath, 'c')
 	endif
