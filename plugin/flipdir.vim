@@ -25,7 +25,7 @@ function s:Flipdir(cmd,...)
 		put = l
 	endfor
 	0delete
-	setl ft=flipdir
+	setl ft=flipdir        " other local settings in ftplugin/flipdir.vim
 	if exists('s:lastpath')
 		call search(s:lastpath, 'c')
 	endif
@@ -83,7 +83,6 @@ nmap <silent> <Plug>(flipdir_reload)  :call <SID>Flipdir('edit')<CR>
 
 " global key mapping
 " local mappings to flipdir buffers in the 'ftplugin' directory
-" 'let g:flipdir_mappings = 0' to disable default mappings
 nmap <unique><silent> - :Flipdir<CR>
 
 " }}}
