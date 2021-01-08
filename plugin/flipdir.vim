@@ -35,7 +35,7 @@ endfunction
 
 " flip/split current or visually selected line paths (file/directory) {{{1
 function s:Fliplines(cmd) range
-	let l:cd = expand('%')
+	let l:cd = expand('%:p')
 	if getline('.') =~ "/$"
 		let l:path = l:cd.fnameescape(getline('.'))
 		call s:Flipdir("edit", l:path)
@@ -67,7 +67,7 @@ if get(g:, 'loaded_netrwPlugin', 0)
 		au!
 		autocmd VimEnter * if &ft == '' &&
 			\isdirectory(expand('<afile>')) |
-			\Flipdir %:p
+			\Flipdir %:p/
 	augroup END
 endif
 " }}}
