@@ -74,12 +74,12 @@ endif
 " mappings {{{1
 
 " Plugs
-map  <silent> <Plug>(flip_linepath)    :call <SID>Fliplines('edit')<CR>
-map  <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
-map  <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
-map  <silent> <Plug>(tabedit_linepath) :call <SID>Fliplines('tabedit')<CR>
-map  <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
-map  <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
+map  <silent> <Plug>(flip_pathline)    :call <SID>Fliplines('edit')<CR>
+map  <silent> <Plug>(split_pathline)   :call <SID>Fliplines('topleft split')<CR>
+map  <silent> <Plug>(vsplit_pathline)  :call <SID>Fliplines('topleft vsplit')<CR>
+map  <silent> <Plug>(tabedit_pathline) :call <SID>Fliplines('tabedit')<CR>
+map  <silent> <Plug>(preview_pathline) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
+map  <silent> <Plug>(argadd_pathline)  :call <SID>Fliplines('argadd')<CR>
 
 " global key mapping
 " the local mappings to flipdir buffers are in the ftplugin/flipdir.vim file

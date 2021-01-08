@@ -7,20 +7,21 @@ let b:did_ftplugin = 1
 " settings
 setlocal nospell noswf nobl bh=wipe bt=nofile
 
-" line paths commands
-map <unique><buffer> l <Plug>(flip_linepath)
-map <unique><buffer> s <Plug>(split_linepath)
-map <unique><buffer> v <Plug>(vsplit_linepath)
-map <unique><buffer> t <Plug>(tabedit_linepath)
-map <unique><buffer> p <Plug>(preview_linepath)
-map <unique><buffer> a <Plug>(argadd_linepath)
+" path lines (accept more than one line)
+map <buffer> <CR> <Plug>(flip_pathline)
+map <buffer>  l   <Plug>(flip_pathline)
+map <buffer>  s   <Plug>(split_pathline)
+map <buffer>  v   <Plug>(vsplit_pathline)
+map <buffer>  t   <Plug>(tabedit_pathline)
+map <buffer>  p   <Plug>(preview_pathline)
+map <buffer>  a   <Plug>(argadd_pathline)
 
-" up directory
-nmap <unique><buffer><silent> h :Flipdir<CR>
+" parent directory
+nmap <buffer><silent> h :Flipdir<CR>
 
-" edit flipdir buffer
-nmap <unique><buffer><nowait> gh <Plug>(flipdir_hidedot)
-nmap <unique><buffer><nowait> gr <Plug>(flipdir_reload)
+" hide dot files and folders (undo to unhide)
+" to undo all(almost) changes :u1 (shortcut for :undo 1)
+nmap <buffer><nowait> gh :keeppatterns g/^\./d<CR>:silent! normal ''<CR>
 
 " delete flipdir buffer
-nmap <unique><buffer><nowait><silent> gq :bdelete!<CR>
+nmap <buffer><nowait><silent> gq :bdelete!<CR>
