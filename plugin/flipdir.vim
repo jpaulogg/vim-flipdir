@@ -36,12 +36,14 @@ endfunction
 " flip/split current or visually selected line paths (file/directory) {{{1
 function s:Fliplines(cmd) range
 	let l:cd = expand('%')
+	if getline('.') =~ "/$"
+		let l:path = l:cd.fnameescape(getline('.'))
+		call s:Flipdir("edit", l:path)
+		return
+	endif
 	for l in getline(a:firstline, a:lastline)
-		exec a:cmd.' '.l:cd.fnameescape(l)
-		if l =~ "/$"
-			call s:Flipdir("edit", expand('%:p:h'))
-			return
-		endif
+		let l:path = l:cd.fnameescape(l)
+		exec a:cmd.' '.l:path
 	endfor
 endfunction
 
