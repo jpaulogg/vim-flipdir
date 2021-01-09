@@ -34,7 +34,7 @@ function s:Flipdir(cmd,...)              " a:1 is an optional argument with the 
 	endif
 endfunction
 
-" flip/split current or visually selected line paths (file/directory) {{{1
+" flip/split current or visually selected path lines (file/directory) {{{1
 function s:Fliplines(cmd) range
 	let l:cd = expand('%:p')
 	if getline('.') =~ "/$"
