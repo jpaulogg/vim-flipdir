@@ -19,7 +19,7 @@ let g:loaded_flipdir = 1
 " flip/split directory {{{1
 function s:Flipdir(cmd,...)              " a:1 is an optional argument with the directory path
 	let l:path = get(a:, 1, s:Parent())  " default value is the parent directory
-	exec a:cmd.' '.l:path.'/'
+	exec a:cmd.' '.l:path
 	let l:ls_output = systemlist('ls '.shellescape(l:path).' -A --group-directories-first')
 	for l in l:ls_output
 		if isdirectory(l:path.'/'.l)
@@ -38,12 +38,12 @@ endfunction
 function s:Fliplines(cmd) range
 	let l:cd = expand('%:p')
 	if getline('.') =~ "/$"
-		let l:path = l:cd.fnameescape(getline('.'))
+		let l:path = l:cd . fnameescape(getline('.'))
 		call s:Flipdir("edit", l:path)
 		return
 	endif
 	for l in getline(a:firstline, a:lastline)
-		let l:path = l:cd.fnameescape(l)
+		let l:path = l:cd . fnameescape(l)
 		exec a:cmd.' '.l:path
 	endfor
 endfunction
