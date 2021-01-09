@@ -51,10 +51,10 @@ endfunction
 " return parent directory full path {{{1
 function s:Parent()
 	if isdirectory(expand('%'))
-		let s:lastpath = expand('%:h:t').'/'
+		let s:lastpath = expand('%:p:h:t').'/'
 		return expand('%:p:h:h')
 	else
-		let s:lastpath = expand('%:t')
+		let s:lastpath = expand('%:p:t')
 		return expand('%:p:h')
 	endif
 endfunction
