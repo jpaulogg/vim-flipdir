@@ -2,7 +2,7 @@ if exists("b:current_syntax")
 	finish
 endif
 
-syn match MiniTreeDir ".*/$"
-hi def link MiniTreeDir netrwDir
+syn match flipDir ".*/$"
+hi def link flipDir netrwDir
 
 let b:current_syntax = "text"
