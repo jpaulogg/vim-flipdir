@@ -10,14 +10,15 @@
 " to flip/split files and browse directories. Buffer's name is  the  directory
 " full path and can be used in command-line expansions (see `:h :c_%`).
 
+" load once
 if exists('g:loaded_flipdir')
 	finish
 endif
 let g:loaded_flipdir = 1
 
 " flip/split directory {{{1
-function s:Flipdir(cmd,...)    " a:1 is an optional argument with a directory path
-	let l:path = get(a:, 1, s:Parent())
+function s:Flipdir(cmd,...)              " a:1 is an optional argument with the directory path
+	let l:path = get(a:, 1, s:Parent())  " default value is the parent directory
 	exec a:cmd.' '.l:path.'/'
 	let l:ls_output = systemlist('ls '.shellescape(l:path).' -A --group-directories-first')
 	for l in l:ls_output
@@ -27,7 +28,7 @@ function s:Flipdir(cmd,...)    " a:1 is an optional argument with a directory pa
 		put = l
 	endfor
 	0delete
-	setl ft=flipdir            " file type settings in ftplugin/flipdir.vim
+	setl ft=flipdir                      " file type settings in ftplugin/flipdir.vim
 	if exists('s:lastpath')
 		call search('^'.s:lastpath.'$', 'c')
 	endif
@@ -47,7 +48,7 @@ function s:Fliplines(cmd) range
 	endfor
 endfunction
 
-" return parent directory path {{{1
+" return parent directory full path {{{1
 function s:Parent()
 	if isdirectory(expand('%'))
 		let s:lastpath = expand('%:h:t').'/'
@@ -59,12 +60,11 @@ function s:Parent()
 endfunction
 
 " commands {{{1
-command -nargs=? -complete=dir Flipdir   call s:Flipdir('edit', <f-args>)
-command -nargs=? -complete=dir Splitdir  call s:Flipdir(<q-mods>.' split', <f-args>)
+command -nargs=? -complete=dir Flipdir  call s:Flipdir('edit', <f-args>)
+command -nargs=? -complete=dir Splitdir call s:Flipdir(<q-mods>.' split', <f-args>)
 
 if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
-		au!
 		autocmd VimEnter * if &ft == '' &&
 			\isdirectory(expand('<afile>')) |
 			\Flipdir %:p/
@@ -86,4 +86,4 @@ map  <silent> <Plug>(argadd_pathline)  :call <SID>Fliplines('argadd')<CR>
 nmap <unique><silent> - :Flipdir<CR>
 
 " }}}
-" vim: set noet fdm=marker :
+" vim: set sw=0 noet fdm=marker :
