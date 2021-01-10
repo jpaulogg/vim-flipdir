@@ -21,7 +21,16 @@ nmap <buffer><silent> h :Flipdir<CR>
 
 " hide dot files and folders (undo to unhide)
 " to undo all(almost) changes :u1 (shortcut for :undo 1)
-nmap <buffer><nowait> gh :keeppatterns g/^\./d<CR>:silent! normal ''<CR>
+nmap <silent><buffer><nowait> gh mF<Cmd>keeppatterns g/^\./d<CR>'F
+" alternative if you prefer to use "'" mark{{{
+"nmap <silent><buffer><nowait> gh <Cmd>call <SID>HideDot()<CR>
+
+"function s:HideDot()
+"	mark '
+"	keeppatterns g/^\./d
+"	silent! normal ''
+"endfunction
+"}}}
 
 " delete flipdir buffer
 nmap <buffer><nowait><silent> gq :bdelete!<CR>
