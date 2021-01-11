@@ -37,14 +37,13 @@ endfunction
 " flip/split current or visually selected path lines (file/directory) {{{1
 function s:Fliplines(cmd) range
 	let l:cd = expand('%:p')
-	if getline('.') =~ "/$"
-		let l:path = l:cd . fnameescape(getline('.'))
-		call s:Flipdir("edit", l:path)
-		return
-	endif
 	for l in getline(a:firstline, a:lastline)
 		let l:path = l:cd . fnameescape(l)
-		exec a:cmd.' '.l:path
+		if l =~ "/$"
+			call s:Flipdir(a:cmd, l:path)
+		else
+			exec a:cmd.' '.l:path
+		endif
 	endfor
 endfunction
 
@@ -63,11 +62,11 @@ endfunction
 command -nargs=? -complete=dir Flipdir  call s:Flipdir('edit', <f-args>)
 command -nargs=? -complete=dir Splitdir call s:Flipdir(<q-mods>.' split', <f-args>)
 
-if get(g:, 'loaded_netrwPlugin', 0)
+if get(g:,"loaded_netrwPlugin")
 	augroup flipdir
 		autocmd VimEnter * if &ft == '' &&
 			\isdirectory(expand('<afile>')) |
-			\Flipdir %:p/
+			\Flipdir %:p
 	augroup END
 endif
 " }}}
@@ -83,7 +82,7 @@ map  <silent> <Plug>(argadd_pathline)  :call <SID>Fliplines('argadd')<CR>
 
 " global key mapping
 " the local mappings to flipdir buffers are in the ftplugin/flipdir.vim file
-nmap <unique><silent> - :Flipdir<CR>
+nmap <unique><silent> - <Cmd>Flipdir<CR>
 
 " }}}
-" vim: set sw=0 noet fdm=marker :
+" vim: set noet fdm=marker :
