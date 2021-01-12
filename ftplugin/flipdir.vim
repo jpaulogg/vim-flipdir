@@ -17,20 +17,16 @@ map <buffer>  p   <Plug>(preview_pathline)
 map <buffer>  a   <Plug>(argadd_pathline)
 
 " parent directory
-nmap <buffer><silent> h :Flipdir<CR>
+nmap <buffer><silent> h <Cmd>Flipdir<CR>
 
-" hide dot files and folders (undo to unhide)
-" to undo all(almost) changes :u1 (shortcut for :undo 1)
-nmap <silent><buffer><nowait> gh mF<Cmd>keeppatterns g/^\./d<CR>'F
-" alternative if you prefer to use "'" mark{{{
-"nmap <silent><buffer><nowait> gh <Cmd>call <SID>HideDot()<CR>
+" hide dot files and folders. Undo to show dot files again.
+nmap <silent><buffer><nowait> gh <Cmd>call <SID>HideDot()<CR>
 
-"function s:HideDot()
-"	mark '
-"	keeppatterns g/^\./d
-"	silent! normal ''
-"endfunction
-"}}}
+function s:HideDot()
+	call search("^[^.]", "c")
+	keeppatterns g/^\./d
+	call cursor(line("''"), 1)
+endfunction
 
 " delete flipdir buffer
-nmap <buffer><nowait><silent> gq :bdelete!<CR>
+nmap <buffer><nowait><silent> gq <Cmd>bdelete!<CR>
