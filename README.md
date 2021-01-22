@@ -31,4 +31,5 @@ path and can be used in command-line expansions (see `:h :c_%`).
 
 `Flipdir {dir}` flips current window to `{dir}` (default to parent directory).
 
-`Splitdir {dir}` splits new window with `{dir}` (default to parent directory).
+`{mod} Splitdir {dir}` splits new window with `{dir}` (default to parent directory).
+You can pass a `{mod}` like `vertical`, `botrigth`, etc.
