@@ -14,7 +14,7 @@ map <buffer>  s   <Plug>(split_pathline)
 map <buffer>  v   <Plug>(vsplit_pathline)
 map <buffer>  t   <Plug>(tabedit_pathline)
 map <buffer>  p   <Plug>(preview_pathline)
-map <buffer>  a   <Plug>(argadd_pathline)
+map <buffer>  x   <Plug>(argadd_pathline)
 
 " parent directory
 nmap <buffer><silent> h <Cmd>Flipdir<CR>
