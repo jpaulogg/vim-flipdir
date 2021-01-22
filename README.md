@@ -25,7 +25,11 @@ path and can be used in command-line expansions (see `:help :c_%`).
 
 `p` previews the path under the cursor in new window
 
-`a` adds path under the cursor to `arglist`.
+`x` adds path under the cursor to `arglist`.
+
+`gh` hide dot files.
+
+`gq` delete flipdir buffer.
 
 ## Commands
 
