@@ -1,6 +1,7 @@
 ## flipdir.vim
 
-Very simplified version of [vim-dirvish](https://github.com/justinmk/vim-dirvish)
+Very simplified version of [vim-dirvish](https://github.com/justinmk/vim-dirvish).
+
 Flip or split current window to new buffer with a list of directories and files.
 Each line in the new buffer is the 'tail'  of  a	path,  which  is  used	to
 flip/split files and browse directories. Buffer's name is the directory full
