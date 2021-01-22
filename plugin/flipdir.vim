@@ -43,6 +43,26 @@ if get(g:, 'loaded_netrwPlugin', 0)
 	augroup END
 endif
 " }}}
+" flip/split directory {{{1
+function s:Flipdir(cmd,...)              " a:1 is an optional argument with the directory path
+	let l:path = get(a:, 1, s:Parent())  " default value is the parent directory
+	exec a:cmd.' '.l:path
+	let l:ls_output = systemlist('ls '.shellescape(l:path).' -A --group-directories-first')
+
+	for l in l:ls_output
+		if isdirectory(l:path.'/'.l)
+			let l .= '/'
+		endif
+		put = l
+	endfor
+	0delete
+	setl ft=flipdir                      " file type settings in ftplugin/flipdir.vim
+
+	if exists('s:lastpath')
+		call search('^'.s:lastpath.'$', 'c')
+	endif
+endfunction
+
 " flip/split current or visually selected path lines (file/directory) {{{1
 function s:Fliplines(cmd) range
 	let l:cd = expand('%:p')
