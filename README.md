@@ -1,11 +1,22 @@
 ## flipdir.vim
 
-Very simplified version of [vim-dirvish](https://github.com/justinmk/vim-dirvish).
+This plugin was inspired by the concept of split explorer presented by [Drew Neil](http://vimcasts.org/blog/2013/01/oil-and-vinegar-split-windows-and-project-drawer/).
 
-Flip or split current window to new buffer with a list of directories and files.
-Each line in the new buffer is the 'tail'  of  a	path,  which  is  used	to
-flip/split files and browse directories. Buffer's name is the directory full
-path and can be used in command-line expansions (see `:help :c_%`).
+> Think of it like this: each split window can either act as a view onto the contents of a file, or it
+> can act as a view onto the contents of a directory. (...) I find that it helps to imagine a
+> **card-flip** transition as the window shifts between file and directory viewing modes.
+> - Drew Neil
+
+I switched from netrw to [vim-dirvish](https://github.com/justinmk/vim-dirvish) when I started using a
+very old laptop and felt the need for a faster plugin. I think dirvish is a great plugin, but it
+have some features that i never used. So I decided to write my own plugin. Just for fun!
+
+## Flipdir buffer
+
+Each line in the flipdir buffer is the 'tail' of a path, which is used to flip/split files and browse directories.
+Buffer's name is the directory full path and can be used in command-line expansions (see `:help
+:c_%`). You can filter lines with `:g` and sort with `:sort` commands. You can undo any change with
+`u` and `:undo`. To undo all changes use `:1 undo`. To reload the buffer use `:Flipdir %`.
 
 ## Mappings
 
@@ -19,11 +30,11 @@ path and can be used in command-line expansions (see `:help :c_%`).
 
 `l` flips current window to path under the cursor
 
-`v` vertically splits new window with the path under the cursor
+`v` topleft vertically splits new window with the path under the cursor
 
-`s` splits new window with the path under the cursor
+`s` topleft splits new window with the path under the cursor
 
-`p` previews the path under the cursor in new window
+`p` previews the path under the cursor in botrigth vertical window
 
 `x` adds path under the cursor to `arglist`.
 
@@ -38,12 +49,25 @@ path and can be used in command-line expansions (see `:help :c_%`).
 `{mod} Splitdir {dir}` splits new window with `{dir}` (default to parent directory).
 You can pass a `{mod}` like `vertical`, `botrigth`, etc.
 
+## Tips
+
+- you can abbreviate commands, like `:F{lipdir}` and `:S{plitdir}`
+- In the command line `<C-r>l` expands to current line, so you can get current line path.
+- So `%<C-r>l` will expands to current line full path.
+- You can easily change split directions in the [mapping section]() of the script.
+
 ## Installation
 
 Install using your favorite package manager, or use (Neo)Vim's built-in package support:
 
+```vim
+" vim-plug
+Plug 'jpaulogg/vim-flipdir
+:PlugInstall
 ```
-# neovim:
+
+```bash
+# built-in package support (in vim use '~/.vim/' instead of '~/.config/nvim')
 mkdir -p ~/.config/nvim/pack/dist/start
 cd ~/.config/nvim/pack/dist/start
 git clone https://github.com/jpaulogg/vim-flipdir

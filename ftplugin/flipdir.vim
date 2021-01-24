@@ -7,14 +7,14 @@ let b:did_ftplugin = 1
 " settings
 setlocal nospell noswf nobl bh=wipe bt=nofile
 
-" path lines (accept more than one line)
-map <buffer> <CR> <Plug>(flip_pathline)
-map <buffer>  l   <Plug>(flip_pathline)
-map <buffer>  s   <Plug>(split_pathline)
-map <buffer>  v   <Plug>(vsplit_pathline)
-map <buffer>  t   <Plug>(tabedit_pathline)
-map <buffer>  p   <Plug>(preview_pathline)
-map <buffer>  x   <Plug>(argadd_pathline)
+" line paths (accept more than one line)
+map <buffer> <CR> <Plug>(flip_linepath)
+map <buffer>  l   <Plug>(flip_linepath)
+map <buffer>  s   <Plug>(split_linepath)
+map <buffer>  v   <Plug>(vsplit_linepath)
+map <buffer>  t   <Plug>(tabedit_linepath)
+map <buffer>  p   <Plug>(preview_linepath)
+map <buffer>  x   <Plug>(argadd_linepath)
 
 " parent directory
 nmap <buffer><silent> h <Cmd>Flipdir<CR>

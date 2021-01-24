@@ -95,4 +95,3 @@ function s:Parent()
 		return expand('%:p:h')
 	endif
 endfunction
-
