@@ -20,12 +20,12 @@ let g:loaded_flipdir = 1
 " mappings {{{1
 
 " Plugs
-map  <silent> <Plug>(flip_pathline)    :call <SID>Fliplines('edit')<CR>
-map  <silent> <Plug>(split_pathline)   :call <SID>Fliplines('topleft split')<CR>
-map  <silent> <Plug>(vsplit_pathline)  :call <SID>Fliplines('topleft vsplit')<CR>
-map  <silent> <Plug>(tabedit_pathline) :call <SID>Fliplines('tabedit')<CR>
-map  <silent> <Plug>(preview_pathline) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
-map  <silent> <Plug>(argadd_pathline)  :call <SID>Fliplines('argadd')<CR>
+map  <silent> <Plug>(flip_linepath)    :call <SID>Fliplines('edit')<CR>
+map  <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
+map  <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
+map  <silent> <Plug>(tabedit_linepath) :call <SID>Fliplines('tabedit')<CR>
+map  <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
+map  <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
 
 " global key mapping
 " the local mappings to flipdir buffers are in the ftplugin/flipdir.vim file
@@ -46,6 +46,9 @@ endif
 " flip/split directory {{{1
 function s:Flipdir(cmd,...)              " a:1 is an optional argument with the directory path
 	let l:path = get(a:, 1, s:Parent())  " default value is the parent directory
+	if l:path !~ '/$'
+		let l:path .= '/'
+	endif
 	exec a:cmd.' '.l:path
 	let l:ls_output = systemlist('ls '.shellescape(l:path).' -A --group-directories-first')
 
@@ -63,10 +66,9 @@ function s:Flipdir(cmd,...)              " a:1 is an optional argument with the 
 	endif
 endfunction
 
-" flip/split current or visually selected path lines (file/directory) {{{1
+" flip/split current or visually selected line paths (file/directory) {{{1
 function s:Fliplines(cmd) range
 	let l:cd = expand('%:p')
-
 	if getline('.') =~ "/$"
 		let l:path = l:cd . fnameescape(getline('.'))
 		call s:Flipdir("edit", l:path)
