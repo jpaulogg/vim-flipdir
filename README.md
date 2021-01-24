@@ -54,7 +54,8 @@ You can pass a `{mod}` like `vertical`, `botrigth`, etc.
 - you can abbreviate commands, like `:F{lipdir}` and `:S{plitdir}`
 - In the command line `<C-r>l` expands to current line, so you can get current line path.
 - So `%<C-r>l` will expands to current line full path.
-- You can easily change split directions in the [mapping section]() of the script.
+- You can easily change split directions in the [mapping section](https://github.com/jpaulogg/vim-flipdir/blob/ee2b8801eefacb533b82f5d679682566142d6820/plugin/flipdir.vim#L24-L27)
+  of the script.
 
 ## Installation
 
