@@ -9,14 +9,15 @@ This plugin was inspired by the concept of split explorer presented by [Drew Nei
 
 I switched from netrw to [vim-dirvish](https://github.com/justinmk/vim-dirvish) when I started using a
 very old laptop and felt the need for a faster plugin. I think dirvish is a great plugin, but it
-have some features that i never used. So I decided to write my own plugin. Just for fun!
+have some features that i never used. All my file management I do from the shell or from a external
+file manager. So I decided to write my own plugin. Just for fun!
 
 ## Flipdir buffer
 
 Each line in the flipdir buffer is the 'tail' of a path, which is used to flip/split files and browse directories.
 Buffer's name is the directory full path and can be used in command-line expansions (see `:help
 :c_%`). You can filter lines with `:g` and sort with `:sort` commands. You can undo any change with
-`u` and `:undo`. To undo all changes use `:1 undo`. To reload the buffer use `:Flipdir %`.
+`u` and `:undo`. To undo all changes use `:1undo`. To reload the buffer use `:Flipdir %`.
 
 ## Mappings
 
