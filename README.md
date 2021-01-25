@@ -13,8 +13,8 @@ more than visualization and exploration of directories content.
 
 I switched from netrw to [vim-dirvish](https://github.com/justinmk/vim-dirvish) when I started
 using a very old laptop and felt the need for a faster plugin. I think dirvish is a great plugin,
-but it have some features that i never used. Also I don't like `conceal` solution. So I decided to
-write my own plugin, based on my use of dirvish.
+but I found it a little difficult to make customizations, since I'm just a beginner in VImscript.
+So I decided to write my own plugin, based on my use of dirvish.
 
 ## Flipdir buffer
 
