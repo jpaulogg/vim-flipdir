@@ -7,10 +7,14 @@ This plugin was inspired by the concept of split explorer [presented by Drew Nei
 > **card-flip** transition as the window shifts between file and directory viewing modes.
 > - Drew Neil
 
-I do all my file management from the shell or from a file manager. I switched from netrw to
-[vim-dirvish](https://github.com/justinmk/vim-dirvish) when I started using a very old laptop and
-felt the need for a faster plugin. I think dirvish is a great plugin, but it have some features
-that i never used. So I decided to write my own plugin, based on my use of dirvish.
+I do all my file management from the shell or from a file manager. Most of the time I use `:find`
+and command-line abbreviation to find my files in vim. So I don't use vim files browser for much
+more than visualization and exploration of directories content.
+
+I switched from netrw to [vim-dirvish](https://github.com/justinmk/vim-dirvish) when I started
+using a very old laptop and felt the need for a faster plugin. I think dirvish is a great plugin,
+but it have some features that i never used. Also I don't like `conceal` solution. So I decided to
+write my own plugin, based on my use of dirvish.
 
 ## Flipdir buffer
 
@@ -39,15 +43,15 @@ Buffer's name is the directory full path and can be used in command-line expansi
 
 `x` adds path under the cursor to `arglist`.
 
-`gh` hide dot files.
+`gh` hides dot files.
 
-`gq` delete flipdir buffer.
+`gq` deletes flipdir buffer.
 
 ## Commands
 
-`Flipdir {dir}` flips current window to `{dir}` (default to parent directory).
+`:Flipdir {dir}` flips current window to `{dir}` (default to parent directory).
 
-`{mod} Splitdir {dir}` splits new window with `{dir}` (default to parent directory).
+`:{mod} Splitdir {dir}` splits new window with `{dir}` (default to parent directory).
 You can pass a `{mod}` like `vertical`, `botrigth`, etc.
 
 ## Tips
@@ -55,7 +59,7 @@ You can pass a `{mod}` like `vertical`, `botrigth`, etc.
 - you can abbreviate commands, like `:F{lipdir}` and `:S{plitdir}`
 - In the command line `<C-r>l` expands to current line, so you can get current line path.
 - So `%<C-r>l` will expands to current line full path.
-- You can use variable, like `:Flip $VIMRUNTIME`.
+- You can use environment variables, like `:Flip $VIMRUNTIME`.
 - You can easily change split directions in the [mapping section](https://github.com/jpaulogg/vim-flipdir/blob/ee2b8801eefacb533b82f5d679682566142d6820/plugin/flipdir.vim#L24-L27)
   of the script.
 
