@@ -1,13 +1,13 @@
 ## flipdir.vim
 
-This plugin was inspired by the concept of split explorer presented by [Drew Neil](http://vimcasts.org/blog/2013/01/oil-and-vinegar-split-windows-and-project-drawer/).
+This plugin was inspired by the concept of split explorer [presented by Drew Neil](http://vimcasts.org/blog/2013/01/oil-and-vinegar-split-windows-and-project-drawer/).
 
 > Think of it like this: each split window can either act as a view onto the contents of a file, or it
 > can act as a view onto the contents of a directory. (...) I find that it helps to imagine a
 > **card-flip** transition as the window shifts between file and directory viewing modes.
 > - Drew Neil
 
-All my file management I do from the shell or from a file manager. I switched from netrw to
+I do all my file management from the shell or from a file manager. I switched from netrw to
 [vim-dirvish](https://github.com/justinmk/vim-dirvish) when I started using a very old laptop and
 felt the need for a faster plugin. I think dirvish is a great plugin, but it have some features
 that i never used. So I decided to write my own plugin, based on my use of dirvish.
@@ -73,5 +73,5 @@ Plug 'jpaulogg/vim-flipdir
 # built-in package support (in vim use '~/.vim/' instead of '~/.config/nvim')
 mkdir -p ~/.config/nvim/pack/dist/start
 cd ~/.config/nvim/pack/dist/start
-git clone https://github.com/jpaulogg/vim-flipdir
+git clone https://github.com/jpaulogg/vim-flipdir.git
 ```
