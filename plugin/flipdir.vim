@@ -5,7 +5,7 @@
 " Flip or split current window to new buffer with directory and files listing
 
 " Licence: public domain
-" Last Change: 2020-01-04
+" Last Change: 2020-01-26
 
 " Each line in the new buffer is the 'tail'  of  a	path,  which  is  used	to
 " flip/split files and browse directories. Buffer's name is the directory full
@@ -35,45 +35,45 @@ command -nargs=? -complete=dir Splitdir call s:Flipdir(<q-mods>.' split', <f-arg
 
 if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
-		autocmd VimEnter * if &ft == '' &&
-			\isdirectory(expand('<afile>')) |
-			\Flipdir %:p/
+		autocmd VimEnter * if isdirectory(expand('<afile>')) | Flipdir %:p/
 	augroup END
 endif
 
 " flip/split directory {{{1
 function s:Flipdir(cmd,...)              " a:1 is an optional argument with the directory path
-	let bname  = expand('%:p')
-	let bname  = isdirectory(bname) && bname !~ '/$' ? bname.'/' : bname
-	let parent = isdirectory(bname) ? fnamemodify(bname, ':h:h').'/' : fnamemodify(bname, ':h').'/'
-
 	if exists('a:1')
-		let target = a:1 =~ '/$' ? a:1 : a:1.'/'
+		let target = a:1
 	else
-		let target = parent
+		let bname  = expand('%:p')
+		let fmod = isdirectory(bname) ? ':h:h' : ':h'
+		let target = fnamemodify(bname, fmod).'/'
 	endif
 	exec 'noswapfile '.a:cmd.' '.target
 
 	let unix_ls = systemlist('ls '.target.' -A --group-directories-first')
 	call map(unix_ls, {list, item -> isdirectory(target.item) ? item.'/' : item})
-	call append(0, unix_ls)
-	$delete
 	" if you prefer, try using globpath(target, '*', 0, 1) instead of systemlist('ls')
 	" and than fnamemodify(item, ':h:t').'/' : fnamemodify(item, ':t'), plus other changes
+	
+	let bufnr = bufnr(target)
+	call setbufline(bufnr, 1, unix_ls)
+	call deletebufline(bufnr, 1)
+	call setbufvar(bufnr, '&ft', 'flipdir')               " file type settings in ftplugin/flipdir.vim
 
-	if target == parent
-		let lastpath = isdirectory(bname) ? fnamemodify(bname, ':h:t').'/' : fnamemodify(bname, ':t')
-		call search('^'.lastpath.'$', 'c')
-	else
-		call cursor(1, 1)
+	if !exists('a:1')
+		let fmod = isdirectory(bname) ? ':h:t' : ':t'
+		let lastpath = fnamemodify(bname, fmod)
+		call search('^'.lastpath.'/\?$', 'c')
 	endif
-
-	setl ft=flipdir                      " file type settings in ftplugin/flipdir.vim
 endfunction
 
 " flip/split current or visually selected line paths (file/directory) {{{1
 function s:Fliplines(cmd) range
 	let curdir = bufname('%')
+	if curdir !~ '/$'
+		let curdir .= '/'
+	endif
+
 	for line in getline(a:firstline, a:lastline)
 		let target = fnameescape(curdir.line)
 		if line =~ "/$"

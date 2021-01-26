@@ -5,7 +5,10 @@ endif
 let b:did_ftplugin = 1
 
 " settings
-setlocal nospell noswf nobl bh=wipe bt=nofile
+setlocal nospell noswf nobl bh=wipe bt=nowrite
+
+" avoid pressing J after V
+xmap <buffer> J j
 
 " line paths (accept more than one line)
 map <buffer> <CR> <Plug>(flip_linepath)
@@ -24,7 +27,7 @@ nmap <silent><buffer><nowait> gh <Cmd>call <SID>HideDot()<CR>
 
 function s:HideDot()
 	call search("^[^.]", "c")
-	keeppatterns g/^\./d
+	keeppatterns g/^\./"_d
 	call cursor(line("''"), 1)
 endfunction
 
