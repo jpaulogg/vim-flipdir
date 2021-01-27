@@ -1,15 +1,11 @@
 " vim: set noet fdm=marker:
-" 'zR' opens and 'zM' closes' all folds
+" zR opens and zM closes all folds
 
-" flipdir.vim - flip/split directory browser <https://github.com/jpaulogg/flipdir.git>
-" Flip or split current window to new buffer with directory and files listing
+" flipdir.vim - flip/split directory browser <http//github.com/jpaulogg/flipdir.git>
+" Flip or split current window to new buffer with directory and files listing.
 
 " Licence: public domain
 " Last Change: 2020-01-26
-
-" Each line in the new buffer is the 'tail'  of  a	path,  which  is  used	to
-" flip/split files and browse directories. Buffer's name is the directory full
-" path and can be used in command-line expansions (see `:h :c_%`).
 
 " load once
 if exists('g:loaded_flipdir')
@@ -17,70 +13,84 @@ if exists('g:loaded_flipdir')
 endif
 let g:loaded_flipdir = 1
 
-" mappings {{{1
-map  <silent> <Plug>(flip_linepath)    :call <SID>Fliplines('edit')<CR>
-map  <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
-map  <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
-map  <silent> <Plug>(tabedit_linepath) :call <SID>Fliplines('tabedit')<CR>
-map  <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
-map  <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
-
-" global key mapping
+" mappings and commands {{{1
 " the local mappings to flipdir buffers are in the ftplugin/flipdir.vim file
 nmap <unique><silent> - <Cmd>Flipdir<CR>
 
-" commands {{{1
-command -nargs=? -complete=dir Flipdir  call s:Flipdir('edit', <f-args>)
-command -nargs=? -complete=dir Splitdir call s:Flipdir(<q-mods>.' split', <f-args>)
+nmap <silent> <Plug>(flip_dir)      <Cmd>call <SID>Flipdir('file!')<CR>
+nmap <silent> <Plug>(flip_linepath) <Cmd>call <SID>Fliplines()<CR>
+
+map <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
+map <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
+map <silent> <Plug>(tabedit_linepath) :call <SID>Fliplines('tabedit')<CR>
+map <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
+
+map <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
+
+" commands
+" similar to netrw's Explore and Sexplore commands. You can even use these namehttps://www.institutolukacs.com.br/s
+command! -nargs=? -complete=dir Flipdir  call s:Flipdir('edit', <f-args>)
+command! -nargs=? -complete=dir Splitdir call s:Flipdir(<q-mods>.' split', <f-args>)
 
 if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
-		autocmd VimEnter * if isdirectory(expand('<afile>')) | Flipdir %:p/
+		" you can add BufEnter autocmd here so ':edit directory' will open a flipdir buffer, etc.
+		autocmd VimEnter * if isdirectory(bufname('%')) |
+		            \ call s:Flipdir('file!', bufname('%'))
 	augroup END
 endif
 
-" flip/split directory {{{1
-function s:Flipdir(cmd,...)              " a:1 is an optional argument with the directory path
+function s:Flipdir(cmd,...)              " {{{1
 	if exists('a:1')
 		let target = a:1
+		let s:lastline = [1]
 	else
 		let bname  = expand('%:p')
-		let fmod   = isdirectory(bname) ? ':h:h' : ':h'
-		let target = fnamemodify(bname, fmod).'/'
+		let dirmod = isdirectory(bname) ? ':h' : ''
+		let target = fnamemodify(bname, dirmod.':h').'/'
+		let lastpath = fnamemodify(bname, dirmod.':t')
+		let s:lastline += [line('.')]
 	endif
 	if target !~ '/$'
 		let target .= '/'
 	endif
-	exec 'noswapfile '.a:cmd.' '.target
 
-	let unix_ls = systemlist('ls '.target.' -A --group-directories-first')
-	call map(unix_ls, {list, item -> isdirectory(target.item) ? item.'/' : item})
-	" if you prefer, try using globpath(target, '*', 0, 1) instead of systemlist('ls')
-	" and than fnamemodify(item, ':h:t').'/' : fnamemodify(item, ':t'), plus other changes
-	
-	let bufnr = bufnr(target)
-	call setbufline(bufnr, 1, unix_ls)
-	call setbufvar(bufnr, '&ft', 'flipdir')               " file type settings in ftplugin/flipdir.vim
-
-	if !exists('a:1')
-		let fmod = isdirectory(bname) ? ':h:t' : ':t'
-		let lastpath = fnamemodify(bname, fmod)
-		call search('^'.lastpath.'/\?$', 'c')
-	else
-		call cursor(line('.'), col('.'))
-	endif
+	exec 'keepalt '.a:cmd.' '.target
+	call s:SetBuffer(target)
+	silent! call search('^'.lastpath.'/\?$', 'c')
 endfunction
 
-" flip/split current or visually selected line paths (file/directory) {{{1
-function s:Fliplines(cmd) range
+let s:lastline = []
+
+function s:SetBuffer(target)             " {{{1
+	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemidx('ls')
+	" and than fnamemodify(val, ':h:t').'/' : fnamemodify(val, ':t'), plus other changes
+	let unix_ls = systemidx('ls '.a:target.' -A --group-directories-first')
+	call map(unix_ls, {idx, val -> isdirectory(a:target.val) ? val.'/' : val})
+
+	let bufnr = bufnr(a:target)
+	silent call deletebufline(bufnr, 1, '$')
+	call setbufvar(bufnr, '&ft', 'flipdir')               " file type settings in ftplugin/flipdir.vim
+	call setbufline(bufnr, 1, unix_ls)
+endfunction
+
+function s:Fliplines(...) range          " {{{1
 	let curdir = bufname('%')
+	let cmd = get(a:, '1', getline('.') =~ '/$' ? 'file' : 'edit')
+
 	for line in getline(a:firstline, a:lastline)
-		let target = fnameescape(curdir.line)
-		if line =~ "/$"
-			call s:Flipdir(a:cmd, target)
+		let target = curdir . fnameescape(line)
+		exec 'keepalt '.cmd.' '.target
+
+		if target !~ "/$"
+			let s:lastline = []
 		else
-			exec a:cmd.' '.target
+			call s:SetBuffer(target)
+			let line = get(s:lastline, -1, 1)
+			call cursor(line, 1)
+			if len(s:lastline) > 1
+				call remove(s:lastline, -1)
+			endif
 		endif
 	endfor
 endfunction
-
