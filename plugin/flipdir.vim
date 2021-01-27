@@ -45,8 +45,11 @@ function s:Flipdir(cmd,...)              " a:1 is an optional argument with the 
 		let target = a:1
 	else
 		let bname  = expand('%:p')
-		let fmod = isdirectory(bname) ? ':h:h' : ':h'
+		let fmod   = isdirectory(bname) ? ':h:h' : ':h'
 		let target = fnamemodify(bname, fmod).'/'
+	endif
+	if target !~ '/$'
+		let target .= '/'
 	endif
 	exec 'noswapfile '.a:cmd.' '.target
 
@@ -57,23 +60,20 @@ function s:Flipdir(cmd,...)              " a:1 is an optional argument with the 
 	
 	let bufnr = bufnr(target)
 	call setbufline(bufnr, 1, unix_ls)
-	call deletebufline(bufnr, 1)
 	call setbufvar(bufnr, '&ft', 'flipdir')               " file type settings in ftplugin/flipdir.vim
 
 	if !exists('a:1')
 		let fmod = isdirectory(bname) ? ':h:t' : ':t'
 		let lastpath = fnamemodify(bname, fmod)
 		call search('^'.lastpath.'/\?$', 'c')
+	else
+		call cursor(line('.'), col('.'))
 	endif
 endfunction
 
 " flip/split current or visually selected line paths (file/directory) {{{1
 function s:Fliplines(cmd) range
 	let curdir = bufname('%')
-	if curdir !~ '/$'
-		let curdir .= '/'
-	endif
-
 	for line in getline(a:firstline, a:lastline)
 		let target = fnameescape(curdir.line)
 		if line =~ "/$"
