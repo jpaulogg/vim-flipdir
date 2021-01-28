@@ -18,10 +18,10 @@ let g:loaded_flipdir = 1
 nmap <unique><silent> - <Cmd>Flipdir<CR>
 
 nmap <silent> <Plug>(flip_linepath) <Cmd>call <SID>Fliplines('edit')<CR>
-map <silent> <Plug>(split_linepath)   :call <SID>Fliplines('topleft split')<CR>
-map <silent> <Plug>(vsplit_linepath)  :call <SID>Fliplines('topleft vsplit')<CR>
-map <silent> <Plug>(tabedit_linepath) :call <SID>Fliplines('tabedit')<CR>
-map <silent> <Plug>(preview_linepath) :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
+map  <silent> <Plug>(split_linepath)    :call <SID>Fliplines('topleft split')<CR>
+map  <silent> <Plug>(vsplit_linepath)   :call <SID>Fliplines('topleft vsplit')<CR>
+map  <silent> <Plug>(tabedit_linepath)  :call <SID>Fliplines('tabedit')<CR>
+nmap <silent> <Plug>(preview_linepath)  :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
 
 map <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
 
@@ -34,7 +34,7 @@ if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
 		" you can add BufEnter autocmd here so ':edit directory' will open a flipdir buffer, etc.
 		autocmd VimEnter * if isdirectory(bufname('%')) | 
-		            \ exec 'file!' (bufname('%') !~ '/$' ? '%/' : '%') |
+		            \ exec bufname('%') !~ '/$' ? 'file! %/' : '' |
 		            \ call s:SetBuffer(bufname('%'))
 	augroup END
 endif
@@ -61,17 +61,6 @@ endfunction
 
 let s:lastline = []
 
-function s:SetBuffer(target)             " {{{1
-	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')
-	" and than fnamemodify(val, ':h:t').'/' : fnamemodify(val, ':t'), plus other changes
-	let unix_ls = systemlist('ls '.a:target.' -A --group-directories-first')
-	call map(unix_ls, {idx, val -> isdirectory(a:target.val) ? val.'/' : val})
-
-	let bufnr = bufnr(a:target)
-	call setbufvar(bufnr, '&ft', 'flipdir')         " file type settings in ftplugin/flipdir.vim
-	call setbufline(bufnr, 1, unix_ls)
-endfunction
-
 function s:Fliplines(cmd) range          " {{{1
 	let curdir = bufname('%')
 
@@ -91,3 +80,14 @@ function s:Fliplines(cmd) range          " {{{1
 		endif
 	endfor
 endfunction
+function s:SetBuffer(target)             " {{{1
+	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')
+	" and than fnamemodify(val, ':h:t').'/' : fnamemodify(val, ':t'), plus other changes
+	let unix_ls = systemlist('ls '.a:target.' -A --group-directories-first')
+	call map(unix_ls, {idx, val -> isdirectory(a:target.val) ? val.'/' : val})
+
+	let bufnr = bufnr(a:target)
+	call setbufvar(bufnr, '&ft', 'flipdir')         " file type settings in ftplugin/flipdir.vim
+	call setbufline(bufnr, 1, unix_ls)
+endfunction
+
