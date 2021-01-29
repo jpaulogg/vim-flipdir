@@ -21,7 +21,7 @@ nmap <silent> <Plug>(flip_linepath) <Cmd>call <SID>Fliplines('edit')<CR>
 map  <silent> <Plug>(split_linepath)    :call <SID>Fliplines('topleft split')<CR>
 map  <silent> <Plug>(vsplit_linepath)   :call <SID>Fliplines('topleft vsplit')<CR>
 map  <silent> <Plug>(tabedit_linepath)  :call <SID>Fliplines('tabedit')<CR>
-nmap <silent> <Plug>(preview_linepath)  :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
+map  <silent> <Plug>(preview_linepath)  :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
 
 map <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
 
@@ -74,9 +74,11 @@ function s:Fliplines(cmd) range          " {{{1
 			call s:SetBuffer(target)
 			let line = get(s:lastline, -1, 1)
 			call cursor(line, 1)
+
 			if len(s:lastline) > 1
 				call remove(s:lastline, -1)
 			endif
+
 		endif
 	endfor
 endfunction
