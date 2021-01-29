@@ -59,8 +59,6 @@ function s:Flipdir(cmd,...)              " {{{1
 	silent! call search('^'.lastpath.'/\?$', 'c')
 endfunction
 
-let s:lastline = []
-
 function s:Fliplines(cmd) range          " {{{1
 	let curdir = bufname('%')
 
@@ -69,19 +67,19 @@ function s:Fliplines(cmd) range          " {{{1
 		exec a:cmd.' '.target
 
 		if target !~ "/$"
-			let s:lastline = []
+			let s:lastline = [1]
 		else
 			call s:SetBuffer(target)
-			let line = get(s:lastline, -1, 1)
+			let line = remove(s:lastline, -1)
+			let s:lastline += [1]
 			call cursor(line, 1)
-
-			if len(s:lastline) > 1
-				call remove(s:lastline, -1)
-			endif
-
 		endif
+
 	endfor
 endfunction
+
+let s:lastline = [1]
+
 function s:SetBuffer(target)             " {{{1
 	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')
 	" and than fnamemodify(val, ':h:t').'/' : fnamemodify(val, ':t'), plus other changes
