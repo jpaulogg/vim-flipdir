@@ -1,11 +1,11 @@
 " vim: set noet fdm=marker:
 " zR opens and zM closes all folds
 
-" flipdir.vim - flip/split directory browser <http//github.com/jpaulogg/flipdir.git>
-" Flip or split current window to new buffer with directory and files listing.
-
+" Plugin: flipdir.vim - flip/split directory browser <http//github.com/jpaulogg/flipdir.git>
 " Licence: public domain
 " Last Change: 2020-01-26
+
+" Flip or split current window to new buffer with directory and files listing.
 
 " load once
 if exists('g:loaded_flipdir')
@@ -17,13 +17,12 @@ let g:loaded_flipdir = 1
 " the local mappings to flipdir buffers are in the ftplugin/flipdir.vim file
 nmap <unique><silent> - <Cmd>Flipdir<CR>
 
-nmap <silent> <Plug>(flip_linepath) <Cmd>call <SID>Fliplines('edit')<CR>
-map  <silent> <Plug>(split_linepath)    :call <SID>Fliplines('topleft split')<CR>
-map  <silent> <Plug>(vsplit_linepath)   :call <SID>Fliplines('topleft vsplit')<CR>
-map  <silent> <Plug>(tabedit_linepath)  :call <SID>Fliplines('tabedit')<CR>
-map  <silent> <Plug>(preview_linepath)  :call <SID>Fliplines('botright vert pedit')<CR><C-w>=
-
-map <silent> <Plug>(argadd_linepath)  :call <SID>Fliplines('argadd')<CR>
+nmap <silent> <Plug>(flipdir_enter)   <Cmd>call  <SID>Fliplines('edit')<CR>
+map  <silent> <Plug>(flipdir_split)       :call  <SID>Fliplines('topleft split')<CR>
+map  <silent> <Plug>(flipdir_vsplit)      :call  <SID>Fliplines('topleft vsplit')<CR>
+map  <silent> <Plug>(flipdir_tabedit)     :call  <SID>Fliplines('tabedit')<CR>
+nmap <silent> <Plug>(flipdir_preview) <Cmd>call  <SID>Fliplines('botright vert pedit')<CR><C-w>=
+map  <silent> <Plug>(flipdir_argadd)      :call  <SID>Fliplines('argadd')<CR>
 
 " commands
 " similar to netrw's Explore and Sexplore commands. You can even use these names
@@ -42,7 +41,7 @@ endif
 function s:Flipdir(cmd,...)              " {{{1
 	if exists('a:1')
 		let target = a:1
-		let s:lastline = [1]
+		let s:lastline = []
 	else
 		let bname  = expand('%:p')
 		let dirmod = isdirectory(bname) ? ':h' : ''
@@ -50,6 +49,7 @@ function s:Flipdir(cmd,...)              " {{{1
 		let lastpath = fnamemodify(bname, dirmod.':t')
 		let s:lastline += [line('.')]
 	endif
+
 	if target !~ '/$'
 		let target .= '/'
 	endif
@@ -59,6 +59,8 @@ function s:Flipdir(cmd,...)              " {{{1
 	silent! call search('^'.lastpath.'/\?$', 'c')
 endfunction
 
+let s:lastline = []
+
 function s:Fliplines(cmd) range          " {{{1
 	let curdir = bufname('%')
 
@@ -67,18 +69,15 @@ function s:Fliplines(cmd) range          " {{{1
 		exec a:cmd.' '.target
 
 		if target !~ "/$"
-			let s:lastline = [1]
+			let s:lastline = []
 		else
 			call s:SetBuffer(target)
-			let line = remove(s:lastline, -1)
-			let s:lastline += [1]
+			let line = len(s:lastline) > 0 ? remove(s:lastline, -1) : 1
 			call cursor(line, 1)
 		endif
 
 	endfor
 endfunction
-
-let s:lastline = [1]
 
 function s:SetBuffer(target)             " {{{1
 	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')

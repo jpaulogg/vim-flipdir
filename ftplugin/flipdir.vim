@@ -9,27 +9,27 @@ setlocal nospell noswf nobl bh=wipe bt=nofile
 
 " mappings
 nmap <buffer>  h   <Cmd>Flipdir<CR>
-nmap <buffer>  l   <Plug>(flip_linepath)
-nmap <buffer> <CR> <Plug>(flip_linepath)
+nmap <buffer>  l   <Plug>(flipdir_enter)
+nmap <buffer> <CR> <Plug>(flipdir_enter)
 
-map <buffer> s <Plug>(split_linepath)
-map <buffer> v <Plug>(vsplit_linepath)
-map <buffer> t <Plug>(tabedit_linepath)
-map <buffer> p <Plug>(preview_linepath)
+map  <buffer> s <Plug>(flipdir_split)  
+map  <buffer> v <Plug>(flipdir_vsplit) 
+map  <buffer> t <Plug>(flipdir_tabedit)
+nmap <buffer> p <Plug>(flipdir_preview)
 
-map <buffer> x <Plug>(argadd_linepath)
+map <buffer> x <Plug>(flipdir_argadd)
 
 " avoid pressing J after V
 xmap <buffer> J j
 
 " hide dot prefixed lines. 'u' to show dot files again.
-nmap <silent><buffer><nowait> gh <Cmd>call <SID>HideDot()<CR>
+nmap <silent><buffer> gh <Cmd>call <SID>HideDot()<CR>
+
+" delete flipdir buffer
+nmap <buffer><nowait><silent> gq <Cmd>bdelete!<CR>
 
 function s:HideDot()
 	call search("^[^.]", "c")
 	keeppatterns g/^\./d_
 	call cursor(line("''"), 1)
 endfunction
-
-" delete flipdir buffer
-nmap <buffer><nowait><silent> gq <Cmd>bdelete!<CR>
