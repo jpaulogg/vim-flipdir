@@ -5,7 +5,7 @@ endif
 let b:did_ftplugin = 1
 
 " settings
-setlocal nospell noswf nobl bh=wipe bt=nofile
+setlocal nospell noswf nobl bh=hide bt=nofile
 
 " mappings
 nmap <buffer>  h   <Cmd>Flipdir<CR>

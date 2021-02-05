@@ -41,27 +41,22 @@ endif
 function s:Flipdir(cmd,...)              " {{{1
 	if exists('a:1')
 		let target = a:1 !~# '/$' ? a:1.'/' : a:1
-		let s:history = []
 	else
 		let bname  = bufname('%')
 		let dirmod = isdirectory(bname) ? ':h' : ''
 		let target = fnamemodify(bname, dirmod.':h').'/'
 		let tail_pat  = fnamemodify(bname, dirmod.':t')
-		let s:history = dirmod ==# ':h' ? add(s:history, line('.')) : []
 	endif
 
 	silent exec a:cmd.' '.target
 	call s:SetBuffer(target)
-	silent! let s:last_acess = searchpos('^'.tail_pat.'/\?$', 'c')
+	silent! let b:last_acess = searchpos('^'.tail_pat.'/\?$', 'c')
 endfunction
 
 let s:history = []
 let s:last_acess = [1, 1]
 
 function s:Fliplines(cmd) range          " {{{1
-	if line('.') != s:last_acess[0]
-		let s:history = []
-	endif
 	let curdir = bufname('%')
 
 	for line in getline(a:firstline, a:lastline)
@@ -70,8 +65,7 @@ function s:Fliplines(cmd) range          " {{{1
 
 		if target =~# "/$"
 			call s:SetBuffer(target)
-			let s:last_acess[0] = len(s:history) > 0 ? remove(s:history, -1) : 1
-			call cursor(s:last_acess)
+			silent! call cursor(b:last_acess)
 		endif
 
 	endfor
