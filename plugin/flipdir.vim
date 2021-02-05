@@ -38,19 +38,19 @@ if get(g:, 'loaded_netrwPlugin', 0)
 	augroup END
 endif
 
-function s:Flipdir(cmd,...)              " {{{1
+function s:Flipdir(cmd, ...)             " {{{1
 	if exists('a:1')
 		let target = fnamemodify(a:1, ':p')
 	else
 		let bname  = expand('%:p')
 		let dirmod = isdirectory(bname) ? ':h' : ''
+		let tail   = fnamemodify(bname, dirmod.':t')
 		let target = fnamemodify(bname, dirmod.':h').'/'
-		let tail_pat = fnamemodify(bname, dirmod.':t')
 	endif
 
-	silent exec a:cmd.' '.target
+	silent exec 'keepalt '.a:cmd.' '.target
 	call s:SetBuffer(target)
-	silent! let b:last_acess = searchpos('^'.tail_pat.'/\?$', 'c')
+	silent! let b:last_acess = searchpos('^'.tail.'/\?$', 'c')
 endfunction
 
 function s:Fliplines(cmd) range          " {{{1
@@ -58,19 +58,17 @@ function s:Fliplines(cmd) range          " {{{1
 
 	for line in getline(a:firstline, a:lastline)
 		let target = curdir . fnameescape(line)
-		exec a:cmd.' '.target
+		exec 'keepalt '.a:cmd.' '.target
 
 		if target =~# "/$"
 			call s:SetBuffer(target)
 			silent! call cursor(b:last_acess)
-		elseif len(s:dir_buffers) > 1
-			silent! exec 'bwipe '.join(s:dir_buffers)[0:-2]
+		elseif len(s:tmp_buffers) > 1
+			silent! exec 'bwipe '.join(s:tmp_buffers)[0:a:cmd =~ 'sp' ? -2 : -1]
 		endif
 
 	endfor
 endfunction
-
-let s:dir_buffers = []
 
 function s:SetBuffer(target)             " {{{1
 	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')
@@ -81,5 +79,7 @@ function s:SetBuffer(target)             " {{{1
 	let bufnr = bufnr(a:target)
 	call setbufvar(bufnr, '&ft', 'flipdir')         " file type settings in ftplugin/flipdir.vim
 	call setbufline(bufnr, 1, unix_ls)
-	call add(s:dir_buffers, bufnr)
+	call add(s:tmp_buffers, bufnr)
 endfunction
+
+let s:tmp_buffers = []
