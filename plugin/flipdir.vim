@@ -41,9 +41,6 @@ endif
 function s:Flipdir(cmd,...)              " {{{1
 	if exists('a:1')
 		let target = fnamemodify(a:1, ':p')
-		if !empty(s:dir_buffers)
-			silent exec 'bwipe '.join(s:dir_buffers)
-		endif
 	else
 		let bname  = expand('%:p')
 		let dirmod = isdirectory(bname) ? ':h' : ''
@@ -56,8 +53,6 @@ function s:Flipdir(cmd,...)              " {{{1
 	silent! let b:last_acess = searchpos('^'.tail_pat.'/\?$', 'c')
 endfunction
 
-let s:dir_buffers = []
-
 function s:Fliplines(cmd) range          " {{{1
 	let curdir = bufname('%')
 
@@ -68,12 +63,14 @@ function s:Fliplines(cmd) range          " {{{1
 		if target =~# "/$"
 			call s:SetBuffer(target)
 			silent! call cursor(b:last_acess)
-		elseif !empty(s:dir_buffers)
-			silent exec 'bwipe '.join(s:dir_buffers)
+		elseif len(s:dir_buffers) > 1
+			silent! exec 'bwipe '.join(s:dir_buffers)[0:-2]
 		endif
 
 	endfor
 endfunction
+
+let s:dir_buffers = []
 
 function s:SetBuffer(target)             " {{{1
 	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')
