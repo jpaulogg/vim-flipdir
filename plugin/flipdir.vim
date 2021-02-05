@@ -17,12 +17,12 @@ let g:loaded_flipdir = 1
 " the local mappings to flipdir buffers are in the ftplugin/flipdir.vim file
 nmap <unique><silent> - <Cmd>Flipdir<CR>
 
-nmap <silent> <Plug>(flipdir_enter)   <Cmd>call  <SID>Fliplines('edit')<CR>
-map  <silent> <Plug>(flipdir_split)       :call  <SID>Fliplines('topleft split')<CR>
-map  <silent> <Plug>(flipdir_vsplit)      :call  <SID>Fliplines('topleft vsplit')<CR>
-map  <silent> <Plug>(flipdir_tabedit)     :call  <SID>Fliplines('tabedit')<CR>
+map  <silent> <Plug>(flipdir_enter)   :call  <SID>Fliplines('edit')<CR>
+map  <silent> <Plug>(flipdir_split)   :call  <SID>Fliplines('topleft split')<CR>
+map  <silent> <Plug>(flipdir_vsplit)  :call  <SID>Fliplines('topleft vsplit')<CR>
+map  <silent> <Plug>(flipdir_tabedit) :call  <SID>Fliplines('tabedit')<CR>
+map  <silent> <Plug>(flipdir_argadd)  :call  <SID>Fliplines('argadd')<CR>
 nmap <silent> <Plug>(flipdir_preview) <Cmd>call  <SID>Fliplines('botright vert pedit')<CR><C-w>=
-map  <silent> <Plug>(flipdir_argadd)      :call  <SID>Fliplines('argadd')<CR>
 
 " commands
 " similar to netrw's Explore and Sexplore commands. You can even use these names
@@ -33,19 +33,22 @@ if get(g:, 'loaded_netrwPlugin', 0)
 	augroup flipdir
 		" you can add BufEnter autocmd here so ':edit directory' will open a flipdir buffer, etc.
 		autocmd VimEnter * if isdirectory(bufname('%')) | 
-		            \ exec bufname('%') !~ '/$' ? 'file! %/' : '' |
+		            \ exec 'file! %:p' |
 		            \ call s:SetBuffer(bufname('%'))
 	augroup END
 endif
 
 function s:Flipdir(cmd,...)              " {{{1
 	if exists('a:1')
-		let target = a:1 !~# '/$' ? a:1.'/' : a:1
+		let target = fnamemodify(a:1, ':p')
+		if !empty(s:dir_buffers)
+			silent exec 'bwipe '.join(s:dir_buffers)
+		endif
 	else
-		let bname  = bufname('%')
+		let bname  = expand('%:p')
 		let dirmod = isdirectory(bname) ? ':h' : ''
 		let target = fnamemodify(bname, dirmod.':h').'/'
-		let tail_pat  = fnamemodify(bname, dirmod.':t')
+		let tail_pat = fnamemodify(bname, dirmod.':t')
 	endif
 
 	silent exec a:cmd.' '.target
@@ -53,8 +56,7 @@ function s:Flipdir(cmd,...)              " {{{1
 	silent! let b:last_acess = searchpos('^'.tail_pat.'/\?$', 'c')
 endfunction
 
-let s:history = []
-let s:last_acess = [1, 1]
+let s:dir_buffers = []
 
 function s:Fliplines(cmd) range          " {{{1
 	let curdir = bufname('%')
@@ -66,6 +68,8 @@ function s:Fliplines(cmd) range          " {{{1
 		if target =~# "/$"
 			call s:SetBuffer(target)
 			silent! call cursor(b:last_acess)
+		elseif !empty(s:dir_buffers)
+			silent exec 'bwipe '.join(s:dir_buffers)
 		endif
 
 	endfor
@@ -80,4 +84,5 @@ function s:SetBuffer(target)             " {{{1
 	let bufnr = bufnr(a:target)
 	call setbufvar(bufnr, '&ft', 'flipdir')         " file type settings in ftplugin/flipdir.vim
 	call setbufline(bufnr, 1, unix_ls)
+	call add(s:dir_buffers, bufnr)
 endfunction

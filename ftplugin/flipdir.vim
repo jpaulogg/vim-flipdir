@@ -8,16 +8,15 @@ let b:did_ftplugin = 1
 setlocal nospell noswf nobl bh=hide bt=nofile
 
 " mappings
-nmap <buffer>  h   <Cmd>Flipdir<CR>
-nmap <buffer>  l   <Plug>(flipdir_enter)
-nmap <buffer> <CR> <Plug>(flipdir_enter)
+map <buffer>  h   <Cmd>Flipdir<CR>
+map <buffer>  l   <Plug>(flipdir_enter)
+map <buffer> <CR> <Plug>(flipdir_enter)
 
 map  <buffer> s <Plug>(flipdir_split)  
 map  <buffer> v <Plug>(flipdir_vsplit) 
 map  <buffer> t <Plug>(flipdir_tabedit)
+map  <buffer> x <Plug>(flipdir_argadd)
 nmap <buffer> p <Plug>(flipdir_preview)
-
-map <buffer> x <Plug>(flipdir_argadd)
 
 " avoid pressing J after V
 xmap <buffer> J j
