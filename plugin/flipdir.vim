@@ -40,40 +40,38 @@ endif
 
 function s:Flipdir(cmd,...)              " {{{1
 	if exists('a:1')
-		let target = a:1
-		let s:lastline = []
+		let target = a:1 !~# '/$' ? a:1.'/' : a:1
+		let s:history = []
 	else
-		let bname  = expand('%:p')
+		let bname  = bufname('%')
 		let dirmod = isdirectory(bname) ? ':h' : ''
 		let target = fnamemodify(bname, dirmod.':h').'/'
-		let lastpath = fnamemodify(bname, dirmod.':t')
-		let s:lastline += [line('.')]
-	endif
-
-	if target !~ '/$'
-		let target .= '/'
+		let tail_pat  = fnamemodify(bname, dirmod.':t')
+		let s:history = dirmod ==# ':h' ? add(s:history, line('.')) : []
 	endif
 
 	silent exec a:cmd.' '.target
 	call s:SetBuffer(target)
-	silent! call search('^'.lastpath.'/\?$', 'c')
+	silent! let s:last_acess = searchpos('^'.tail_pat.'/\?$', 'c')
 endfunction
 
-let s:lastline = []
+let s:history = []
+let s:last_acess = [1, 1]
 
 function s:Fliplines(cmd) range          " {{{1
+	if line('.') != s:last_acess[0]
+		let s:history = []
+	endif
 	let curdir = bufname('%')
 
 	for line in getline(a:firstline, a:lastline)
 		let target = curdir . fnameescape(line)
 		exec a:cmd.' '.target
 
-		if target !~ "/$"
-			let s:lastline = []
-		else
+		if target =~# "/$"
 			call s:SetBuffer(target)
-			let line = len(s:lastline) > 0 ? remove(s:lastline, -1) : 1
-			call cursor(line, 1)
+			let s:last_acess[0] = len(s:history) > 0 ? remove(s:history, -1) : 1
+			call cursor(s:last_acess)
 		endif
 
 	endfor
@@ -89,4 +87,3 @@ function s:SetBuffer(target)             " {{{1
 	call setbufvar(bufnr, '&ft', 'flipdir')         " file type settings in ftplugin/flipdir.vim
 	call setbufline(bufnr, 1, unix_ls)
 endfunction
-
