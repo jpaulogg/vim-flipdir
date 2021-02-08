@@ -24,8 +24,8 @@ xmap <buffer> J j
 " hide dot prefixed lines. 'u' to show dot files again.
 nmap <silent><buffer> gh <Cmd>call <SID>HideDot()<CR>
 
-" delete flipdir buffer
-nmap <buffer><nowait><silent> gq <Cmd>bdelete!<CR>
+" hide flipdir buffer
+nmap <buffer><nowait><silent> gq <Cmd>hide<CR>
 
 function s:HideDot()
 	call search("^[^.]", "c")
