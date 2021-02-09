@@ -29,17 +29,16 @@ nmap <silent> <Plug>(flipdir_preview) <Cmd>call  <SID>Fliplines('botright vert p
 command! -nargs=? -complete=dir Flipdir  call s:Flipdir('edit', <f-args>)
 command! -nargs=? -complete=dir Splitdir call s:Flipdir(<q-mods>.' split', <f-args>)
 
-if get(g:, 'loaded_netrwPlugin', 0)
+if exists('loaded_netrwPlugin')
 	augroup flipdir
 		" you can add BufEnter autocmd here so ':edit directory' will open a flipdir buffer, etc.
 		autocmd VimEnter * if isdirectory(bufname('%')) | 
-		            \ exec 'file! %:p' |
-		            \ call s:SetBuffer(bufname('%'))
+		            \ file %:p | call s:SetBuffer(bufname('%'))
 	augroup END
 endif
 
 function s:Flipdir(cmd, ...)             " {{{1
-	if exists('a:1')
+	if a:0
 		let target = fnamemodify(a:1, ':p')
 	else
 		let bname  = expand('%:p')
@@ -58,26 +57,33 @@ function s:Fliplines(cmd) range          " {{{1
 
 	for line in getline(a:firstline, a:lastline)
 		let target = curdir . fnameescape(line)
-		exec 'keepalt '.a:cmd.' '.target
+		silent exec 'keepalt '.a:cmd.' '.target
 
 		if target =~# "/$"
 			call s:SetBuffer(target)
 			silent! call cursor(b:last_acess)
-		elseif len(s:tmp_buffers) > 1
-			silent! exec 'bwipe '.join(s:tmp_buffers)[0:a:cmd =~ 'sp' ? -2 : -1]
 		endif
 
 	endfor
+
+	if len(s:tmp_buffers) > 8
+		silent! exec 'bwipe '.join(s:tmp_buffers)[0:4]
+	endif
 endfunction
 
 function s:SetBuffer(target)             " {{{1
+	let bufnr = bufnr(a:target)
+	if getbufvar(bufnr, '&filetype') == 'flipdir'
+		call setbufvar(bufnr, '&buflisted', 0)
+		return
+	endif
+
 	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')
 	" and than fnamemodify(val, ':h:t').'/' : fnamemodify(val, ':t'), plus other changes
 	let unix_ls = systemlist('ls '.a:target.' -A --group-directories-first')
 	call map(unix_ls, {idx, val -> isdirectory(a:target.val) ? val.'/' : val})
 
-	let bufnr = bufnr(a:target)
-	call setbufvar(bufnr, '&ft', 'flipdir')         " file type settings in ftplugin/flipdir.vim
+	call setbufvar(bufnr, '&filetype', 'flipdir')         " file type settings in ftplugin/flipdir.vim
 	call setbufline(bufnr, 1, unix_ls)
 	call add(s:tmp_buffers, bufnr)
 endfunction
