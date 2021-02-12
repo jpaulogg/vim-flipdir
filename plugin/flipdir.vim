@@ -66,8 +66,8 @@ function s:Fliplines(cmd) range          " {{{1
 
 	endfor
 
-	if len(s:tmp_buffers) > 8
-		silent! exec 'bwipe '.join(s:tmp_buffers)[0:4]
+	if len(s:tmp_buffers) > 5
+		silent! exec 'bwipe '.join(remove(s:tmp_buffers 0, 2))
 	endif
 endfunction
 
