@@ -69,7 +69,7 @@ Install using your favorite package manager, or use (Neo)Vim's built-in package 
 
 ```vim
 " vim-plug
-Plug 'jpaulogg/vim-flipdir
+Plug 'jpaulogg/vim-flipdir'
 :PlugInstall
 ```
 

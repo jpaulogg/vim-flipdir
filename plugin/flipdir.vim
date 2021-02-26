@@ -78,10 +78,11 @@ function s:SetBuffer(target)             " {{{1
 		return
 	endif
 
-	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls')
-	" and than fnamemodify(val, ':h:t').'/' : fnamemodify(val, ':t'), plus other changes
-	let unix_ls = systemlist('ls '.a:target.' -A --group-directories-first')
-	call map(unix_ls, {idx, val -> isdirectory(a:target.val) ? val.'/' : val})
+	let unix_ls = systemlist('ls '.a:target.' -pA --group-directories-first')
+	" if you prefer, try using globpath(a:target, '*', 0, 1) instead of systemlist('ls');
+	" and than fnamemodify(val, ':h:t').'/' : fnamemodify(val, ':t');
+	" call map(pathlist, {idx, val -> isdirectory(a:target.val) ? val.'/' : val}), etc.
+	" you need to experiment these suggestions...
 
 	call setbufvar(bufnr, '&filetype', 'flipdir')         " file type settings in ftplugin/flipdir.vim
 	call setbufline(bufnr, 1, unix_ls)
